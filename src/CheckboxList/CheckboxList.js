@@ -1,36 +1,42 @@
-import React from "react"
-import { useState, useEffect} from "react";
+import React, { useEffect } from "react"
+import { useState } from "react";
 
 export default function CheckboxList(props){
     const title = props.title
     const length = props.content.length
-    const [taskCounter, setTaskCounter] = useState(0)
-    const [checkedList, setCheckedList] = useState(
-        new Array(length).fill(false)
-    );
-    const handleClick = (index) => {
-        setTaskCounter(taskCounter + 1)
-        setCheckedList(
-            checkedList.map(
-                (element, i) => {
-                    return (index === i) ? !element : element
-                }
-            )
-        )
-        console.log(checkedList)
-    }
+    const [taskListStatus, setTaskListStatus] = useState({
+        checked : Array(length).fill(false),
+        classes : Array(length).fill("list-element-content-non_strikethrough"),
+        totalCounter : 0          
+    })
+    const [currentChoice, setCurrentChoice] = useState(0)
 
-    const content = props.content.map(
-        (person,key) => 
-        <li className="list-element" key={key}>
-            <button className="list-element-content" onClick={() => handleClick(key)}>{person}</button>
+    const handleClick = (index) => {
+        let v1 =taskListStatus.checked.map(
+            (element, i) => ( i === index ) ? !element : element
+        )
+        let v2 = taskListStatus.classes.map(
+            (element,i) => (taskListStatus.checked[i]) ? "list-element-content-strikethrough" : "list-element-content-non_strikethrough"
+        )
+
+        let v3 = taskListStatus.checked.filter(checked => checked === true).length
+        setTaskListStatus({
+            checked : [...v1],
+            classes : [...v2],
+            totalCounter : v3
+        })
+    }
+    
+    useEffect(() => {
+        handleClick(currentChoice)
+        console.log(currentChoice)
+    },[currentChoice])
+    let content = props.content.map(
+        (element,i) => 
+        <li className="list-element" key={i}>
+            <button className={taskListStatus.classes[i]} onClick={() => setCurrentChoice(i)}>{element}</button>
         </li>
     )
-    useEffect(() => {
-        checkedList.forEach((el,i) => {
-            (el === true) ? content[i].props.className = "list-element-content-strikethrough"  : content[i].props.className = "list-element-content-non_strikethrough" 
-        })
-    },checkedList)
     return(
         <div className="list-box">
             <h1 className="list-title">
@@ -39,8 +45,7 @@ export default function CheckboxList(props){
             <ul className="list-holder">
                 {content}
             </ul>
-            <progress max={length} value={taskCounter}/>
-            
+            <progress max={length} value={taskListStatus.totalCounter}/>
         </div>
     )
 }

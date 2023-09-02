@@ -17,7 +17,7 @@
 .list-element-content-strikethrough{
   background:none; 
   border:none;
-  text-decoration: overline;
+  text-decoration:line-through;
 }
 
 .list-element-content-non_strikethrough{
