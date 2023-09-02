@@ -14,13 +14,7 @@
 
 }
 
-.list-element-content-strikethrough{
-  background:none; 
-  border:none;
-  text-decoration:line-through;
-}
-
-.list-element-content-non_strikethrough{
+.list-element-content{
   background:none; 
   border:none;
 }
